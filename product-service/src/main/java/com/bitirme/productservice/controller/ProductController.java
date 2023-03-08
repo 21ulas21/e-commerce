@@ -23,7 +23,7 @@ public class ProductController {
         return ResponseEntity.ok(ProductResponse.toResponse(product));
     }
 
-    @GetMapping("/{categoryName}")
+    @GetMapping("allproduct/{categoryName}")
     public ResponseEntity<List<ProductResponse>> getAllProducts(@PathVariable String categoryName){
         List<ProductResponse> productResponseList = toResponse(service.getProductByCategory(categoryName));
         return ResponseEntity.ok(productResponseList);
@@ -51,7 +51,7 @@ public class ProductController {
     }
     //Order-Service metodu
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@RequestBody String id){
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable String id){
         ProductDto productDto = service.getProductById(id);
        return ResponseEntity.ok(ProductResponse.toResponse(productDto));
 

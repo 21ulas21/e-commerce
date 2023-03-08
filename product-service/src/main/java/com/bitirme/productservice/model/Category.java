@@ -19,7 +19,7 @@ public class Category {
     private static final String COL_ID = "id";
     public static final String COL_NAME ="name";
     public static final String COL_DESCRIPTION="description";
-    private static final String COL_CREATE_DATE = "create_date";
+    private static final String COL_CREATE_DATE = "created_date";
     private static final String COL_PRODUCT_ID = "product_id";
 
 
@@ -42,7 +42,7 @@ public class Category {
 
     @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
     @Column(name = COL_PRODUCT_ID)
-    private List<Product> productList;
+    private List<Product> urunListesi;
 
 
 

@@ -8,9 +8,9 @@ import lombok.Data;
 import java.util.List;
 @Data
 @Builder
-public class BucketDto {
+public class CartDto {
     private String id;
-    private List<OrderItems> orderItems;
+    private List<OrderItems> orderList;
     private String userId;
     private double totalPrice;
 }

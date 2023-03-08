@@ -1,8 +1,9 @@
 package com.bitirme.orderservice.service.Impl;
 
 
-import com.bitirme.orderservice.model.Bucket;
+import com.bitirme.orderservice.model.Cart;
 import com.bitirme.orderservice.model.Order;
+
 import com.bitirme.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ public class OrderServiceImpl {
     private final OrderRepository repository;
 
 
-    public Order createOrder(Bucket bucket){
+    public Order createOrder(Cart cart){
         Order order = new Order();
-        order.setBucket(bucket);
+        order.setSiparisList(cart.getEsyaListesi());
+        order.setUserId(cart.getPersonId());
+        order.setTotalPrice(cart.getTotalPrice());
        return repository.save(order);
     }
 

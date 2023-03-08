@@ -1,14 +1,16 @@
 package com.bitirme.orderservice.service.Impl;
 
 
-import com.bitirme.orderservice.dto.BucketDto;
+
+import com.bitirme.orderservice.dto.CartDto;
 import com.bitirme.orderservice.dto.InventoryDto;
 import com.bitirme.orderservice.dto.ProductDto;
-import com.bitirme.orderservice.model.Bucket;
+import com.bitirme.orderservice.model.Cart;
 import com.bitirme.orderservice.model.Order;
 import com.bitirme.orderservice.model.OrderItems;
-import com.bitirme.orderservice.repository.BucketRepository;
-import com.bitirme.orderservice.service.BucketService;
+import com.bitirme.orderservice.repository.CartRepository;
+
+import com.bitirme.orderservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,9 +19,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BucketServiceImpl implements BucketService {
+public class CartServiceImpl implements CartService {
 
-    private final BucketRepository repository;
+    private final CartRepository repository;
     private final OrderItemServiceImpl orderItemService;
     private final OrderServiceImpl orderService;
     WebClient webClient = WebClient.create("http://localhost:8080/product");
@@ -31,9 +33,9 @@ public class BucketServiceImpl implements BucketService {
         if (inventoryDto.getQuantity()>=quantity){
             ProductDto productDto = productService(productId);
             OrderItems orderItems =orderItemService.creatOrderItem(productDto, quantity);
-            Bucket resultBucket = repository.findByUserId(userId);
-            resultBucket.getOrderItems().add(orderItems);
-            repository.save(resultBucket);
+            Cart resultCart = repository.findByPersonId(userId);
+            resultCart.getEsyaListesi().add(orderItems);
+            repository.save(resultCart);
             return "Ürün sepete Eklendi";
         }else {
             return "Stokta " + inventoryDto.getQuantity() + " adet ürün mevcut";
@@ -43,11 +45,11 @@ public class BucketServiceImpl implements BucketService {
     //SEPET OLUŞTURMA
     public void createBucket(String userId){
 
-        Bucket bucket = new Bucket();
+        Cart cart = new Cart();
         List<OrderItems> orderItems = new ArrayList<>();
-        bucket.setUserId(userId);
-        bucket.setOrderItems(orderItems);
-        repository.save(bucket);
+        cart.setPersonId(userId);
+        cart.setEsyaListesi(orderItems);
+        repository.save(cart);
     }
     /*
     kullanıcıdan productId ve userId alıyor veri tabanında userId ile sorgu yapıp kişinin sepetini buluyor, sepette belirtilen
@@ -55,31 +57,33 @@ public class BucketServiceImpl implements BucketService {
      */
     //SEPETTEN ÜRÜN ÇIKARMA
     public void removeItem(String productId, String userId){
-        Bucket bucket = repository.findByUserId(userId);
-       List<OrderItems> orderItemsList = repository.findByUserId(userId).getOrderItems();
+        Cart cart = repository.findByPersonId(userId);
+       List<OrderItems> orderItemsList = repository.findByPersonId(userId).getEsyaListesi();
         OrderItems orderItems1 = orderItemsList.stream()
                                     .filter(orderItems -> orderItems.getProductId()==productId)
                                     .findFirst().get();
         orderItemsList.remove(orderItems1);
-        repository.save(bucket);
+        repository.save(cart);
     }
     //userId ile productDto çeken metot
-    public BucketDto getBucket(String userId){
-    Bucket bucket = repository.findByUserId(userId);
-    List<OrderItems> orderItemsList = bucket.getOrderItems();
+    public CartDto getBucket(String userId){
+    Cart cart = repository.findByPersonId(userId);
+    List<OrderItems> orderItemsList = cart.getEsyaListesi();
 
-    orderItemsList.stream().forEach(orderItems -> bucket.setTotalPrice(orderItems.getQuantity()*orderItems.getProductPrice()+ bucket.getTotalPrice()));
+    orderItemsList.stream().forEach(orderItems -> cart.setTotalPrice(orderItems.getQuantity()*orderItems.getProductPrice()+ cart.getTotalPrice()));
 
-    return toDto(bucket);
+    return toDto(cart);
     }
     //inventory-serviceten inventory nesnesi çeken metot
     public InventoryDto inventoryService(String productId){
-    InventoryDto inventoryDto =inventoryClient.get()
+
+
+        return inventoryClient.get()
             .uri("/{productId}",productId)
             .retrieve()
             .bodyToMono(InventoryDto.class)
             .block();
-        return inventoryDto;
+
     }
     //product servisten id ile product nesnesi çekmeyi sağlayan metot
     public ProductDto productService(String productId){
@@ -90,25 +94,25 @@ public class BucketServiceImpl implements BucketService {
                 .block();
     }
 
-    public BucketDto toDto(Bucket bucket){
-        return BucketDto.builder()
-                .id(bucket.getId())
-                .orderItems(bucket.getOrderItems())
-                .totalPrice(bucket.getTotalPrice())
-                .userId(bucket.getUserId())
+    public CartDto toDto(Cart cart){
+        return CartDto.builder()
+                .id(cart.getId())
+                .orderList(cart.getEsyaListesi())
+                .totalPrice(cart.getTotalPrice())
+                .userId(cart.getPersonId())
                 .build();
     }
     public Order createOrder(String userId) {
-        Bucket bucket = repository.findByUserId(userId);
-        List<OrderItems> orderItemsList = bucket.getOrderItems();
+        Cart cart = repository.findByPersonId(userId);
+        List<OrderItems> orderItemsList = cart.getEsyaListesi();
         orderItemsList.stream()
                 .filter(orderItems -> inventoryService(orderItems.getProductId()).getQuantity()<orderItems.getQuantity())
                 .findFirst()
                 .ifPresent(order -> {throw new RuntimeException(order.getProductName()+" stokta yeterli miktarda ürünü bulunmamakta");});
-       Order order = orderService.createOrder(bucket);
-        bucket.getOrderItems().clear();
-        bucket.setTotalPrice(0);
-        repository.save(bucket);
+       Order order = orderService.createOrder(cart);
+        cart.getEsyaListesi().clear();
+        cart.setTotalPrice(0);
+        repository.save(cart);
         return order;
     }
 

@@ -21,7 +21,7 @@ public class Product implements Serializable {
  public static final String COL_ID = "id";
  public static final String COL_NAME ="name";
  public static final String COL_DESCRIPTION = "description";
- public static final String COL_CREATE_DATE="create_date";
+ public static final String COL_CREATE_DATE="created_date";
  public static final String COL_BRAND="brand";
  public static final String COL_BARCODE="barcode";
  public static final String COL_PRICE="price";

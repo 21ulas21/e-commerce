@@ -1,6 +1,6 @@
 package com.bitirme.orderservice.dto;
 
-import com.bitirme.orderservice.model.Bucket;
+import com.bitirme.orderservice.model.Cart;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +10,6 @@ import java.util.Date;
 public class OrderDto {
 
     private String id;
-    private Bucket bucket;
+    private Cart cart;
     private Date creatDate;
 }

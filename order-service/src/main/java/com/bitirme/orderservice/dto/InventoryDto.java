@@ -8,11 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class InventoryDto {
 
     private String id;
-    private String squCode;
+    private String productId;
     private Integer quantity;
-
 }

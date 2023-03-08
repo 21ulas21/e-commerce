@@ -5,27 +5,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "t_order")
+@Table(name = "siparis")
 public class Order {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
-    @OneToOne
-    @JoinColumn(name = "bucket_field")
-    private Bucket bucket;
-    @CreatedDate
+
+     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creatDate;
+    private Date createdDate;
 
-
+     private String userId;
+     @OneToMany()
+     private List<OrderItems> siparisList;
+     private Double totalPrice;
 }

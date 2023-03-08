@@ -25,21 +25,21 @@ public class InventoryController {
        return inventoryService.getAllStock();
 
     }
-    @PostMapping("/create")
-    public ResponseEntity<String> createStock(@RequestBody String productId){
+    @PostMapping("/create/{productId}")
+    public ResponseEntity<String> createStock(@PathVariable String productId){
 
         inventoryService.createStock(productId);
         return ResponseEntity.ok("Stock oluşturuldu");
     }
 
     @PutMapping("/incstock")
-    public void incStock(@RequestBody String productId, @RequestBody Integer quantity){
+    public void incStock(@RequestParam String productId, @RequestParam Integer quantity){
 
         inventoryService.stockInc(productId, quantity);
     }
 
     @PutMapping("/decstock")
-    public void decStock(@RequestBody String productId, @RequestBody Integer quantity){
+    public void decStock(@RequestParam String productId, @RequestParam Integer quantity){
         inventoryService.stockDec(productId, quantity);
     }
 

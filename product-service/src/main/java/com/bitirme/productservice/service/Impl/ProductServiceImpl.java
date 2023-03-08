@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getProductByCategory(String categoryName){
         Category category = categoryService.getByName(categoryName);
-        return category.getProductList().stream().map(this::toDto).toList();
+        return category.getUrunListesi().stream().map(this::toDto).toList();
     }
 
     @Override
@@ -75,7 +75,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void inventoryService(String productId){
-        webClient.post().uri("/{id}", productId);
+        WebClient webClient1 = WebClient.builder().build();
+        webClient1.post().uri("http://localhost:8181/api/inventory/create/{productId}",productId).retrieve().bodyToMono(String.class).subscribe(System.out::println);
+     //   webClient.post().uri("/create/{productId}", productId).
 
         /*
         InventoryDto inventoryDto =inventoryClient.get()
