@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 public class CartDto {
     private String id;
-    private List<OrderItems> orderList;
-    private String userId;
+    private List<OrderItems> orderItems;
+    private String personId;
     private double totalPrice;
 }

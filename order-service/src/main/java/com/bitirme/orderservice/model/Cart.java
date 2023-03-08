@@ -14,13 +14,25 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Cart {
+
+    private final static String COL_ID="id";
+    private final static String COL_PERSON_ID = "person_id";
+    private final static String COL_TOTAL_PRICE="total_price";
+    private final static String COL_ITEM_LIST="item_list";
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = COL_ID)
     private String id;
+
+    @Column(name = COL_PERSON_ID)
     private String personId;
+
+    @Column(name = COL_TOTAL_PRICE)
     private double totalPrice;
+
     @OneToMany()
-    public List<OrderItems> esyaListesi;
+    public List<OrderItems> orderItems;
 
 }

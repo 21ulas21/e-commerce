@@ -17,7 +17,7 @@ public class OrderServiceImpl {
 
     public Order createOrder(Cart cart){
         Order order = new Order();
-        order.setSiparisList(cart.getEsyaListesi());
+        order.setSiparisList(cart.getOrderItems());
         order.setUserId(cart.getPersonId());
         order.setTotalPrice(cart.getTotalPrice());
        return repository.save(order);

@@ -34,7 +34,7 @@ public class CartServiceImpl implements CartService {
             ProductDto productDto = productService(productId);
             OrderItems orderItems =orderItemService.creatOrderItem(productDto, quantity);
             Cart resultCart = repository.findByPersonId(userId);
-            resultCart.getEsyaListesi().add(orderItems);
+            resultCart.getOrderItems().add(orderItems);
             repository.save(resultCart);
             return "Ürün sepete Eklendi";
         }else {
@@ -43,12 +43,12 @@ public class CartServiceImpl implements CartService {
 
     }
     //SEPET OLUŞTURMA
-    public void createBucket(String userId){
+    public void createCart(String userId){
 
         Cart cart = new Cart();
         List<OrderItems> orderItems = new ArrayList<>();
         cart.setPersonId(userId);
-        cart.setEsyaListesi(orderItems);
+        cart.setOrderItems(orderItems);
         repository.save(cart);
     }
     /*
@@ -58,19 +58,21 @@ public class CartServiceImpl implements CartService {
     //SEPETTEN ÜRÜN ÇIKARMA
     public void removeItem(String productId, String userId){
         Cart cart = repository.findByPersonId(userId);
-       List<OrderItems> orderItemsList = repository.findByPersonId(userId).getEsyaListesi();
+       List<OrderItems> orderItemsList = repository.findByPersonId(userId).getOrderItems();
         OrderItems orderItems1 = orderItemsList.stream()
-                                    .filter(orderItems -> orderItems.getProductId()==productId)
+                                    .filter(orderItems -> orderItems.getProductId().equals(productId))
                                     .findFirst().get();
         orderItemsList.remove(orderItems1);
         repository.save(cart);
     }
     //userId ile productDto çeken metot
-    public CartDto getBucket(String userId){
-    Cart cart = repository.findByPersonId(userId);
-    List<OrderItems> orderItemsList = cart.getEsyaListesi();
+    public CartDto getCart(String personId){
+    Cart cart = repository.findByPersonId(personId);
+    List<OrderItems> orderItemsList = cart.getOrderItems();
 
-    orderItemsList.stream().forEach(orderItems -> cart.setTotalPrice(orderItems.getQuantity()*orderItems.getProductPrice()+ cart.getTotalPrice()));
+    orderItemsList.stream()
+            .forEach(orderItems ->
+                    cart.setTotalPrice(orderItems.getQuantity()*orderItems.getProductPrice()+ cart.getTotalPrice()));
 
     return toDto(cart);
     }
@@ -97,20 +99,20 @@ public class CartServiceImpl implements CartService {
     public CartDto toDto(Cart cart){
         return CartDto.builder()
                 .id(cart.getId())
-                .orderList(cart.getEsyaListesi())
+                .orderItems(cart.getOrderItems())
                 .totalPrice(cart.getTotalPrice())
-                .userId(cart.getPersonId())
+                .personId(cart.getPersonId())
                 .build();
     }
     public Order createOrder(String userId) {
         Cart cart = repository.findByPersonId(userId);
-        List<OrderItems> orderItemsList = cart.getEsyaListesi();
+        List<OrderItems> orderItemsList = cart.getOrderItems();
         orderItemsList.stream()
                 .filter(orderItems -> inventoryService(orderItems.getProductId()).getQuantity()<orderItems.getQuantity())
                 .findFirst()
                 .ifPresent(order -> {throw new RuntimeException(order.getProductName()+" stokta yeterli miktarda ürünü bulunmamakta");});
        Order order = orderService.createOrder(cart);
-        cart.getEsyaListesi().clear();
+        cart.getOrderItems().clear();
         cart.setTotalPrice(0);
         repository.save(cart);
         return order;

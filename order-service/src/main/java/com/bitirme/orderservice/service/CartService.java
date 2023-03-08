@@ -5,10 +5,10 @@ import com.bitirme.orderservice.dto.ProductDto;
 import com.bitirme.orderservice.model.Order;
 
 public interface CartService {
-    void createBucket(String userId);
-    void removeItem(String productId, String userId);
-    String addItem(String productId, Integer quantity, String userId);
+    void createCart(String personId);
+    void removeItem(String productId, String personId);
+    String addItem(String productId, Integer quantity, String personId);
 
-    CartDto getBucket(String userId);
-    Order createOrder(String userId);
+    CartDto getCart(String personId);
+    Order createOrder(String personId);
 }
