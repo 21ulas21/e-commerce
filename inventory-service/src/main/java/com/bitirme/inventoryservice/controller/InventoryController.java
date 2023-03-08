@@ -2,6 +2,7 @@ package com.bitirme.inventoryservice.controller;
 
 import com.bitirme.inventoryservice.dto.InventoryDto;
 
+import com.bitirme.inventoryservice.response.InventoryResponse;
 import com.bitirme.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +21,10 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
     @GetMapping("/getAll")
-    public List<InventoryDto> getAllStock(){
+    public ResponseEntity<List<InventoryResponse>> getAllStock(){
 
-       return inventoryService.getAllStock();
+        List<InventoryResponse> inventoryResponseList = toResponse(inventoryService.getAllStock());
+        return ResponseEntity.ok(inventoryResponseList);
 
     }
     @PostMapping("/create/{productId}")
@@ -44,9 +46,15 @@ public class InventoryController {
     }
 
     @GetMapping("/{productId}")
-    public InventoryDto stockQuantity(@PathVariable String productId){
-       return inventoryService.stockQuantity(productId);
+    public InventoryResponse stockQuantity(@PathVariable String productId){
 
+            return InventoryResponse.toResponse(inventoryService.stockQuantity(productId));
+
+    }
+
+    public List<InventoryResponse> toResponse(List<InventoryDto> inventoryDtoList){
+
+        return inventoryDtoList.stream().map(InventoryResponse::toResponse).toList();
     }
 
 
