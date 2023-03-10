@@ -2,18 +2,17 @@ package com.bitirme.orderservice.service.Impl;
 
 
 
+import com.bitirme.orderservice.config.InventoryWebClient;
+import com.bitirme.orderservice.config.ProductWebClient;
 import com.bitirme.orderservice.dto.CartDto;
 import com.bitirme.orderservice.dto.InventoryDto;
 import com.bitirme.orderservice.dto.ProductDto;
 import com.bitirme.orderservice.model.Cart;
-import com.bitirme.orderservice.model.Order;
 import com.bitirme.orderservice.model.OrderItems;
 import com.bitirme.orderservice.repository.CartRepository;
-
 import com.bitirme.orderservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,23 +22,22 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository repository;
     private final OrderItemServiceImpl orderItemService;
-    private final OrderServiceImpl orderService;
-    WebClient webClient = WebClient.create("http://localhost:8080/product");
-    WebClient inventoryClient = WebClient.create("http://localhost:8181/api/inventory");
+    private final InventoryWebClient inventoryService;
+    private final ProductWebClient productService;
+
 
     //SEPETE ÜRÜN EKLEME
     public String addItem(String productId, Integer quantity, String userId){
-        InventoryDto inventoryDto = inventoryService(productId);
+        InventoryDto inventoryDto = inventoryService.getInventory(productId);
         if (inventoryDto.getQuantity()>=quantity){
-            ProductDto productDto = productService(productId);
+            ProductDto productDto = productService.getProductById(productId);
             OrderItems orderItems =orderItemService.creatOrderItem(productDto, quantity);
             Cart resultCart = repository.findByPersonId(userId);
             resultCart.getOrderItems().add(orderItems);
             repository.save(resultCart);
             return "Ürün sepete Eklendi";
-        }else {
-            return "Stokta " + inventoryDto.getQuantity() + " adet ürün mevcut";
         }
+        return "Stokta yeterli miktarda ürün bulunmamakta";
 
     }
     //SEPET OLUŞTURMA
@@ -51,10 +49,7 @@ public class CartServiceImpl implements CartService {
         cart.setOrderItems(orderItems);
         repository.save(cart);
     }
-    /*
-    kullanıcıdan productId ve userId alıyor veri tabanında userId ile sorgu yapıp kişinin sepetini buluyor, sepette belirtilen
-    ürünün productId ile aramasını yapıyor ve sepetten çıkarıp veritabanına tekrar kaydediyor
-     */
+
     //SEPETTEN ÜRÜN ÇIKARMA
     public void removeItem(String productId, String userId){
         Cart cart = repository.findByPersonId(userId);
@@ -63,38 +58,60 @@ public class CartServiceImpl implements CartService {
                                     .filter(orderItems -> orderItems.getProductId().equals(productId))
                                     .findFirst().get();
         orderItemsList.remove(orderItems1);
-        repository.save(cart);
-    }
-    //userId ile productDto çeken metot
+        repository.save(cart);    }
+
+
+    //userId ile sepeti getiren metot
     public CartDto getCart(String personId){
     Cart cart = repository.findByPersonId(personId);
-    List<OrderItems> orderItemsList = cart.getOrderItems();
-
-    orderItemsList.stream()
-            .forEach(orderItems ->
-                    cart.setTotalPrice(orderItems.getQuantity()*orderItems.getProductPrice()+ cart.getTotalPrice()));
-
-    return toDto(cart);
+    List<OrderItems> orderItems = cart.getOrderItems();
+    orderItems.forEach(orderItems1 -> orderItems1
+            .setProductPrice(productService
+                    .getProductById(orderItems1.getProductId())
+                    .getPrice()));
+    cart.setOrderItems(orderItems);
+    Cart cart1 = calculatePrice(cart);
+    repository.save(cart1);
+    return toDto(cart1);
     }
-    //inventory-serviceten inventory nesnesi çeken metot
-    public InventoryDto inventoryService(String productId){
 
 
-        return inventoryClient.get()
-            .uri("/{productId}",productId)
-            .retrieve()
-            .bodyToMono(InventoryDto.class)
-            .block();
+    public CartDto getCartById(String personId){//A ve B ürününden
+        checkInventory(personId);
+        Cart cart = repository.findByPersonId(personId);
+        List<OrderItems> orderItems = new ArrayList<>(cart.getOrderItems());
+        CartDto cartDto = toDto(cart);
+        cart.getOrderItems().clear();
+        repository.save(cart);
+        cartDto.setOrderItems(orderItems);
+
+        return  cartDto;
+
 
     }
-    //product servisten id ile product nesnesi çekmeyi sağlayan metot
-    public ProductDto productService(String productId){
-        return webClient.get()
-                .uri("/{id}", productId)
-                .retrieve()
-                .bodyToMono(ProductDto.class)
-                .block();
+    public Cart calculatePrice(Cart cart){
+        List<OrderItems> orderItemsList = cart.getOrderItems();
+        Double temp = orderItemsList.stream()
+                .mapToDouble(orderItems -> orderItems.getProductPrice()*orderItems.getQuantity())
+                .sum();
+        cart.setTotalPrice(temp);
+        return cart;
+
     }
+    public void checkInventory(String personId){
+        Cart cart = repository.findByPersonId(personId);
+        List<OrderItems> orderItems = cart.getOrderItems();
+        orderItems.stream()
+                .filter(orderItems1
+                        -> inventoryService
+                        .getInventory(orderItems1.getProductId()).getQuantity()>=orderItems1.getQuantity())
+                .findFirst()
+                .orElseThrow(
+                        () -> new RuntimeException("ürün stokta bulunamadı"));
+
+    }
+
+
 
     public CartDto toDto(Cart cart){
         return CartDto.builder()
@@ -104,35 +121,6 @@ public class CartServiceImpl implements CartService {
                 .personId(cart.getPersonId())
                 .build();
     }
-    public Order createOrder(String userId) {
-        Cart cart = repository.findByPersonId(userId);
-        List<OrderItems> orderItemsList = cart.getOrderItems();
-        orderItemsList.stream()
-                .filter(orderItems -> inventoryService(orderItems.getProductId()).getQuantity()<orderItems.getQuantity())
-                .findFirst()
-                .ifPresent(order -> {throw new RuntimeException(order.getProductName()+" stokta yeterli miktarda ürünü bulunmamakta");});
-       Order order = orderService.createOrder(cart);
-        cart.getOrderItems().clear();
-        cart.setTotalPrice(0);
-        repository.save(cart);
-        return order;
-    }
-
-
-/*
-sepet oluşturma=create(userId)
-ürün ekleme=+
-ürün çıkarma=+
-sepetteki ürünleri gösterme=+
-siparişi oluşturma=
-
-
-
-
- */
-
-
-
 
 
 

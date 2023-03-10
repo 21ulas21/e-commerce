@@ -26,8 +26,10 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-     private String userId;
+     private String personId;
+
      @OneToMany()
-     private List<OrderItems> siparisList;
+     private List<OrderItems> orderItems;
+
      private Double totalPrice;
 }

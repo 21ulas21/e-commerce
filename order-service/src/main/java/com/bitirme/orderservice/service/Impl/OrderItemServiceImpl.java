@@ -15,7 +15,7 @@ public class OrderItemServiceImpl {
 
     public OrderItems creatOrderItem(ProductDto productDto, Integer quantity){
         OrderItems orderItems = new OrderItems();
-       // orderItems.setId("123456");//random String id oluşturulacak
+
         orderItems.setQuantity(quantity);
         orderItems.setProductId(productDto.getId());
         orderItems.setImageUrl(productDto.getImageUrl());

@@ -1,29 +1,28 @@
 package com.bitirme.orderservice.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.bitirme.orderservice.dto.OrderDto;
+import com.bitirme.orderservice.response.OrderResponse;
+import com.bitirme.orderservice.service.OrderService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+@RestController("/order")
+@RequiredArgsConstructor
 public class OrderController {
+    private final OrderService orderService;
+    @PostMapping("/createorder")
+    public ResponseEntity<OrderResponse> createOrder(@RequestParam String personId){
 
-    public void createOrder() {
-        // sepet oluşturma
-        //service katmanında ürün stock kontrolü yapılır
-        // ürünlerin listesini geri döner
-        //ve sepet idsi geri döner
-
-
-    }
-    public void siparis(){
-        //parametre olarak sepet idsi alır
-        //id veritabanında aratılır ve kayıtlı ürünler stocktan düşürülür
-        // kullanıcıya sipariş verildi mesajı döner
-
-
+       OrderDto orderDto = orderService.createOrder(personId);
+        return ResponseEntity.ok(OrderResponse.toResponse(orderDto));
 
     }
-    public void creatItem(@PathVariable String productId, @RequestBody Integer quantity){
 
 
-    }
+
+
 
 }
