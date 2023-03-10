@@ -3,16 +3,11 @@ package com.bitirme.orderservice.service.Impl;
 
 import com.bitirme.orderservice.dto.CartDto;
 import com.bitirme.orderservice.dto.OrderDto;
-import com.bitirme.orderservice.model.Cart;
 import com.bitirme.orderservice.model.Order;
-
-import com.bitirme.orderservice.model.OrderItems;
 import com.bitirme.orderservice.repository.OrderRepository;
 import com.bitirme.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

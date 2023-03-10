@@ -91,7 +91,7 @@ public class CartServiceImpl implements CartService {
     }
     public Cart calculatePrice(Cart cart){
         List<OrderItems> orderItemsList = cart.getOrderItems();
-        Double temp = orderItemsList.stream()
+        double temp = orderItemsList.stream()
                 .mapToDouble(orderItems -> orderItems.getProductPrice()*orderItems.getQuantity())
                 .sum();
         cart.setTotalPrice(temp);

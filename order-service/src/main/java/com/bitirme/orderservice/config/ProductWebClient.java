@@ -8,13 +8,13 @@ import static com.bitirme.orderservice.constants.ProductConstants.GET_PRODUCT_BY
 
 @Service
 public class ProductWebClient {
-    private final static String PRODUCT_SERVİCE_BASE_URL ="http://localhost:8080/product";
+    private final static String PRODUCT_SERVICE_BASE_URL ="http://localhost:8080/product";
 
     private final WebClient webClient;
 
 
     public ProductWebClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(PRODUCT_SERVİCE_BASE_URL).build();
+        this.webClient = webClientBuilder.baseUrl(PRODUCT_SERVICE_BASE_URL).build();
     }
 
     public ProductDto getProductById(String productId){

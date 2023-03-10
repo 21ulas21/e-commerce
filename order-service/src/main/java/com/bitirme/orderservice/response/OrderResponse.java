@@ -1,7 +1,6 @@
 package com.bitirme.orderservice.response;
 
 import com.bitirme.orderservice.dto.OrderDto;
-import com.bitirme.orderservice.model.Cart;
 import com.bitirme.orderservice.model.OrderItems;
 import lombok.Builder;
 import lombok.Data;

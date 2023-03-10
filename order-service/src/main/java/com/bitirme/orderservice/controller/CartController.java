@@ -1,12 +1,7 @@
 package com.bitirme.orderservice.controller;
 
 
-import com.bitirme.orderservice.dto.CartDto;
-import com.bitirme.orderservice.dto.OrderDto;
-import com.bitirme.orderservice.model.Order;
-
 import com.bitirme.orderservice.response.CartResponse;
-import com.bitirme.orderservice.response.OrderResponse;
 import com.bitirme.orderservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -47,13 +42,7 @@ public class CartController {
         return ResponseEntity.ok(CartResponse.toResponse(cartService.getCart(personId)));
 
     }
-    /*
-    TODO: ürün septten çıkarma çalışmıyor++
-            stock kontrolü sonrası hata fırlatmıyor--
-            fiyat hesaplaması yanlış--
-            ürünler sepette güncelleme işlemi yapılması gerek
 
-     */
 
 
 

@@ -1,6 +1,5 @@
 package com.bitirme.orderservice.constants;
 
-import org.springframework.stereotype.Service;
 
 
 public class InventoryConstants {

@@ -5,10 +5,8 @@ import com.bitirme.orderservice.response.OrderResponse;
 import com.bitirme.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 @RestController("/order")
 @RequiredArgsConstructor
 public class OrderController {
