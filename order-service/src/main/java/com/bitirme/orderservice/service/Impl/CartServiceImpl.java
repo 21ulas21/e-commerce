@@ -78,7 +78,7 @@ public class CartServiceImpl implements CartService {
 
     public CartDto getCartById(String personId){//A ve B ürününden
         checkInventory(personId);
-        Cart cart = repository.findByPersonId(personId);
+        Cart cart = calculatePrice(repository.findByPersonId(personId));
         List<OrderItems> orderItems = new ArrayList<>(cart.getOrderItems());
         CartDto cartDto = toDto(cart);
         cart.getOrderItems().clear();
@@ -121,6 +121,13 @@ public class CartServiceImpl implements CartService {
                 .personId(cart.getPersonId())
                 .build();
     }
+
+    /*
+    TODO: AUTH kısmı yapılacak !!!!!!!
+            Filtreleme
+            Analiz son 30 ürün getirme
+
+     */
 
 
 

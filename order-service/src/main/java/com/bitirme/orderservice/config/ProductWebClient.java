@@ -8,7 +8,7 @@ import static com.bitirme.orderservice.constants.ProductConstants.GET_PRODUCT_BY
 
 @Service
 public class ProductWebClient {
-    private final static String PRODUCT_SERVICE_BASE_URL ="http://localhost:8080/product";
+    private final static String PRODUCT_SERVICE_BASE_URL ="http://PRODUCT-SERVICE/product";
 
     private final WebClient webClient;
 

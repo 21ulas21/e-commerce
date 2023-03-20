@@ -8,7 +8,7 @@ import static com.bitirme.orderservice.constants.InventoryConstants.GET_INVENTOR
 
 @Service
 public class InventoryWebClient {
-    private final static String INVENTORY_SERVICE_BASE_URL="http://localhost:8181/api/inventory";
+    private final static String INVENTORY_SERVICE_BASE_URL="http://INVENTORY-SERVICE/inventory";
     private final WebClient webClient;
 
     public InventoryWebClient(WebClient.Builder webClientBuilder) {

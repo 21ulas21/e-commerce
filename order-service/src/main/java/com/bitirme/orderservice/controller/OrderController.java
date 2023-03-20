@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/order")
+@RestController("siparis")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    @PostMapping("/createorder")
+    @PostMapping()
     public ResponseEntity<OrderResponse> createOrder(@RequestParam String personId){
 
        OrderDto orderDto = orderService.createOrder(personId);

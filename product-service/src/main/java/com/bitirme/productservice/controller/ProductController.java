@@ -34,11 +34,19 @@ public class ProductController {
         List<ProductResponse> productResponseList = toResponse(service.getAllProducts());
         return ResponseEntity.ok(productResponseList);
     }
+    @GetMapping("allproducts/{field}")
+    public ResponseEntity<List<ProductResponse>> getAllProductByField(@PathVariable String field){
+        List<ProductResponse> responses =toResponse(service.getAllProductByField(field));
+        return ResponseEntity.ok(responses);
+
+
+    }
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable(value = "id")String id,@Valid @RequestBody ProductRequest request){
         ProductDto product = service.updateProduct(id, request.toDto());
         return ResponseEntity.ok(ProductResponse.toResponse(product));
     }
+
 
 
     @DeleteMapping("/{id}")

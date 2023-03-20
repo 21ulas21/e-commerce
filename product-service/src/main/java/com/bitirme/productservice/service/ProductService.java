@@ -14,4 +14,5 @@ public interface ProductService {
     List<ProductDto> getProductByCategory(String categoryName);
 
     ProductDto getProductById(String id);
+    List<ProductDto> getAllProductByField(String field);
 }

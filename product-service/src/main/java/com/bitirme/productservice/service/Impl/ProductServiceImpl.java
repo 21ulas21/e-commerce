@@ -1,5 +1,6 @@
 package com.bitirme.productservice.service.Impl;
 
+import com.bitirme.productservice.config.InventoryWebClient;
 import com.bitirme.productservice.dto.CategoryDto;
 import com.bitirme.productservice.dto.ProductDto;
 import com.bitirme.productservice.model.Category;
@@ -7,6 +8,7 @@ import com.bitirme.productservice.model.Product;
 import com.bitirme.productservice.repository.ProductRepository;
 import com.bitirme.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -14,6 +16,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final CategoryServiceImpl categoryService;
-
-    WebClient webClient = WebClient.create("http://localhost:8181/api/inventory");
+    private final InventoryWebClient inventoryService;
 
 
 
@@ -32,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
         checkProductExists(dto);
 
        Product product =repository.save(toEntity(dto));
-         inventoryService(product.getId());
+         inventoryService.createInventory(product.getId());
         return toDto(product);
     }
     @Override
@@ -62,6 +64,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> getAllProductByField(String field) {
+        List<Product> products =repository.findAll(Sort.by(Sort.Direction.ASC,field));
+        return products.stream().map(this::toDto).collect(Collectors.toList());
+
+    }
+
+    @Override
     public void deleteProduct(String id) {
         repository.deleteById(id);
     }
@@ -74,21 +83,6 @@ public class ProductServiceImpl implements ProductService {
         });
     }
 
-    public void inventoryService(String productId){
-        WebClient webClient1 = WebClient.builder().build();
-        webClient1.post().uri("http://localhost:8181/api/inventory/create/{productId}",productId).retrieve().bodyToMono(String.class).subscribe(System.out::println);
-     //   webClient.post().uri("/create/{productId}", productId).
-
-        /*
-        InventoryDto inventoryDto =inventoryClient.get()
-            .uri("/{productId}",productId)
-            .retrieve()
-            .bodyToMono(InventoryDto.class)
-            .block();
-        return inventoryDto;
-         */
-
-    }
 
     private Product checkProductUpdate(ProductDto dto, Product product) {
         product.setName(dto.getName()==null?product.getName():dto.getName());
