@@ -1,0 +1,17 @@
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\dto\ProductDto.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\dto\CategoryDto.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\model\Product.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\ProductServiceApplication.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\controller\ProductController.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\controller\CategoryController.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\repository\CategoryRepository.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\request\CategoryRequest.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\repository\ProductRepository.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\model\Category.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\service\ProductService.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\request\ProductRequest.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\response\CategoryResponse.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\service\Impl\CategoryServiceImpl.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\service\Impl\ProductServiceImpl.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\response\ProductResponse.java
+E:\ecommerce\micro\ecommer\product-service\src\main\java\com\bitirme\productservice\service\CategoryService.java

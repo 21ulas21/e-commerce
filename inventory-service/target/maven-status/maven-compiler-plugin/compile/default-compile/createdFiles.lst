@@ -1,0 +1,12 @@
+com\bitirme\inventoryservice\dto\InventoryDto.class
+com\bitirme\inventoryservice\InventoryServiceApplication.class
+com\bitirme\inventoryservice\response\InventoryResponse$InventoryResponseBuilder.class
+com\bitirme\inventoryservice\response\InventoryResponse.class
+com\bitirme\inventoryservice\controller\InventoryController.class
+com\bitirme\inventoryservice\request\InventoryRequest.class
+com\bitirme\inventoryservice\service\InventoryService.class
+com\bitirme\inventoryservice\repository\InventoryRepository.class
+com\bitirme\inventoryservice\model\Inventory.class
+com\bitirme\inventoryservice\dto\InventoryDto$InventoryDtoBuilder.class
+com\bitirme\inventoryservice\request\InventoryRequest$InventoryRequestBuilder.class
+com\bitirme\inventoryservice\service\impl\InventoryServiceImpl.class
