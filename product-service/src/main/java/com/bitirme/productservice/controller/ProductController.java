@@ -6,6 +6,7 @@ import com.bitirme.productservice.response.ProductResponse;
 import com.bitirme.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService service;
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping()
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
         ProductDto product = service.createProduct(request.toDto());
@@ -41,6 +42,7 @@ public class ProductController {
 
 
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable(value = "id")String id,@Valid @RequestBody ProductRequest request){
         ProductDto product = service.updateProduct(id, request.toDto());
@@ -48,7 +50,7 @@ public class ProductController {
     }
 
 
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     void delete(@PathVariable String id){
         service.deleteProduct(id);

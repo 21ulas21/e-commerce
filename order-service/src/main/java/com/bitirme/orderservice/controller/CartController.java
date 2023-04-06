@@ -5,6 +5,7 @@ import com.bitirme.orderservice.response.CartResponse;
 import com.bitirme.orderservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,6 +22,7 @@ public class CartController {
         cartService.createCart(personId);
 
     }
+    @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/additem")
     public ResponseEntity<String> addItem(@RequestParam String productId,@RequestParam Integer quantity,@RequestParam String personId){
 
@@ -29,6 +31,7 @@ public class CartController {
 
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/removeitem")
     public ResponseEntity<String> removeItem(@RequestParam String productId, @RequestParam String personId){
         cartService.removeItem(productId, personId);
@@ -36,6 +39,7 @@ public class CartController {
 
 
     }
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/cart")
     public ResponseEntity<CartResponse> getCart(@RequestParam String personId){
 

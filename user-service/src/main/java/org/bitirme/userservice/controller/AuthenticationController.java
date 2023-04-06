@@ -7,7 +7,7 @@ import org.bitirme.userservice.response.AuthenticationResponse;
 import org.bitirme.userservice.service.impl.AuthenticationServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+//eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IlVTRVIiLCJzdWIiOiJ1bGFzMSIsImlhdCI6MTY4MDc1MzYwNCwiZXhwIjoxNjgwODIyNzI0fQ.gX-uWyMqhJ4pU8pvMRRTZVgsrCNlkRwSH2GQR-0ajcg
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
