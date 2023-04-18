@@ -19,6 +19,7 @@ public class InventoryWebClient {
        return webClient
                .get()
                .uri(GET_INVENTORY_BY_PRODUCT_ID,productId)
+               .header("API_KEY","123456")
                .retrieve()
                .bodyToMono(InventoryDto.class)
                .block();

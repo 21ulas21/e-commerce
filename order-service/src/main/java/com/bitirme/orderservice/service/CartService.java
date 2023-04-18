@@ -4,10 +4,9 @@ import com.bitirme.orderservice.dto.CartDto;
 
 
 public interface CartService {
-    void createCart(String personId);
-    void removeItem(String productId, String personId);
-    String addItem(String productId, Integer quantity, String personId);
-    CartDto getCart(String personId);
+    void removeItem(String productId);
+    String addItem(String productId, Integer quantity);
+    CartDto getCart();
 
 
 }

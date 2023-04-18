@@ -16,34 +16,29 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/create")
-    public void createCart(@RequestParam String personId){
 
-        cartService.createCart(personId);
-
-    }
     @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/additem")
-    public ResponseEntity<String> addItem(@RequestParam String productId,@RequestParam Integer quantity,@RequestParam String personId){
+    public ResponseEntity<String> addItem(@RequestParam String productId,@RequestParam Integer quantity){
 
-        cartService.addItem(productId,quantity,personId);
-        return ResponseEntity.ok("Ürün sepete eklendi");
+
+        return ResponseEntity.ok(cartService.addItem(productId,quantity));
 
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/removeitem")
-    public ResponseEntity<String> removeItem(@RequestParam String productId, @RequestParam String personId){
-        cartService.removeItem(productId, personId);
+    public ResponseEntity<String> removeItem(@RequestParam String productId){
+        cartService.removeItem(productId);
         return ResponseEntity.ok("Ürün sepetten çıkarıldı");
 
 
     }
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/cart")
-    public ResponseEntity<CartResponse> getCart(@RequestParam String personId){
+    public ResponseEntity<CartResponse> getCart(){
 
-        return ResponseEntity.ok(CartResponse.toResponse(cartService.getCart(personId)));
+        return ResponseEntity.ok(CartResponse.toResponse(cartService.getCart()));
 
     }
 

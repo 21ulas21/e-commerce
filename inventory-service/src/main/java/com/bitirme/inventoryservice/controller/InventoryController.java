@@ -28,6 +28,7 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryResponseList);
 
     }
+    @PreAuthorize("hasAnyAuthority('ADMIN','SERVICE')")
     @PostMapping("/create/{productId}")
     public ResponseEntity<String> createStock(@PathVariable String productId){
 
@@ -35,17 +36,20 @@ public class InventoryController {
         return ResponseEntity.ok("Stock oluşturuldu");
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','SERVICE')")
     @PutMapping("/incstock")
     public void incStock(@RequestParam String productId, @RequestParam Integer quantity){
 
         inventoryService.stockInc(productId, quantity);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','SERVICE')")
     @PutMapping("/decstock")
     public void decStock(@RequestParam String productId, @RequestParam Integer quantity){
         inventoryService.stockDec(productId, quantity);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','SERVICE')")
     @GetMapping("/{productId}")
     public InventoryResponse stockQuantity(@PathVariable String productId){
 

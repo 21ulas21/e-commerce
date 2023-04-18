@@ -3,12 +3,17 @@ package com.bitirme.productservice.service.Impl;
 import com.bitirme.productservice.config.InventoryWebClient;
 import com.bitirme.productservice.dto.CategoryDto;
 import com.bitirme.productservice.dto.ProductDto;
+import com.bitirme.productservice.exception.ProductNotFoundException;
 import com.bitirme.productservice.model.Category;
 import com.bitirme.productservice.model.Product;
 import com.bitirme.productservice.repository.ProductRepository;
 import com.bitirme.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,20 +26,24 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-
+    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final ProductRepository repository;
     private final CategoryServiceImpl categoryService;
     private final InventoryWebClient inventoryService;
 
 
+    public String authName(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
 
     @Override
     @Transactional
     public ProductDto createProduct(ProductDto dto) {
         checkProductExists(dto);
-
        Product product =repository.save(toEntity(dto));
          inventoryService.createInventory(product.getId());
+         logger.info("Ürün oluşturuldu "+dto.getName()+authName());
         return toDto(product);
     }
     @Override
@@ -44,7 +53,8 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> checkProductUpdate(dto,product))
                 .map(repository::save)
                 .map(this::toDto)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() ->new ProductNotFoundException("Ürün Bulunamadı"));
+
     }
     @Override
     public List<ProductDto> getAllProducts() {
@@ -59,12 +69,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductById(String id) {
-        Product product = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(" Kayıt bulunamadı"));
+        Product product = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(" Kayıt bulunamadı"));
         return toDto(product);
     }
 
     @Override
     public List<ProductDto> getAllProductByField(String field) {
+        logger.info(field + " özelliğine göre ürünler listelendi");
         List<Product> products =repository.findAll(Sort.by(Sort.Direction.ASC,field));
         return products.stream().map(this::toDto).collect(Collectors.toList());
 
@@ -73,11 +84,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(String id) {
         repository.deleteById(id);
+        logger.info("ürün silindi " + id);
     }
 
     private void checkProductExists(ProductDto dto) {
         repository.findByName(dto.getName()).ifPresent(product -> {
-            throw new EntityExistsException(
+            throw new ProductNotFoundException(
                     String.format("Entity %s already exists", product.getClass().getName())
             );
         });
@@ -90,6 +102,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(dto.getBrand()==null?product.getBrand():dto.getBrand());
         product.setBarcode(dto.getBarcode()==null?product.getBarcode():dto.getBarcode());
         product.setDescription(dto.getDescription()==null?product.getDescription():dto.getDescription());
+        logger.info("ürün güncellebdi " + product.getName() + " " + authName());
         return product;
     }
 

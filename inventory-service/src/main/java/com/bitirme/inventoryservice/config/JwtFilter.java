@@ -5,11 +5,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,51 +31,39 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if(request.getHeader("API_KEY") !=null && request.getHeader("API_KEY").equals("123456")){
 
-        String autheader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
-        UsernamePasswordAuthenticationToken authToken;
+            Authentication authentication = new PreAuthenticatedAuthenticationToken(null, null, getAuthority("SERVICE"));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request,response);
 
-        if (autheader != null && autheader.startsWith("Bearer ")){
-            token = autheader.substring(7);
-            Claims claims = extractAllClaims(token);
-            UserDetails userDetails = userDetails(token);
-            authToken = new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
         }else {
-            authToken = new UsernamePasswordAuthenticationToken(null, null, null);
-            authToken.setAuthenticated(false);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            UsernamePasswordAuthenticationToken authenticationToken;
+            String autheader = request.getHeader("Authorization");
+            if (autheader != null && autheader.startsWith("Bearer ")){
+                String token = autheader.substring(7);
+                UserDetails userDetails = getUserDetails(token);
+                authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }else {
+                authenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
+                authenticationToken.setAuthenticated(false);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+            filterChain.doFilter(request,response);
+
         }
-        filterChain.doFilter(request,response);
+
     }
 
-
-    private Claims extractAllClaims(String token){
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private Key getSignKey() {
-        byte[] keyBytes= Decoders.BASE64.decode(SECRET);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    private UserDetails userDetails(String token){
+    private UserDetails getUserDetails(String token){
         Claims claims = extractAllClaims(token);
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        String roles = (String) claims.get("roles");
-        grantedAuthorities.add(new SimpleGrantedAuthority(roles));
+        String role = (String) claims.get("roles");
         UserDetails userDetails = new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
-                return grantedAuthorities;
+                return getAuthority(role);
             }
 
             @Override
@@ -108,5 +98,28 @@ public class JwtFilter extends OncePerRequestFilter {
         };
         return userDetails;
 
+
+
+    }
+
+    private Key getSignKey() {
+        byte[] keyBytes= Decoders.BASE64.decode(SECRET);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private Claims extractAllClaims(String token){
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private List<GrantedAuthority> getAuthority(String role){
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+        return grantedAuthorities;
     }
 }

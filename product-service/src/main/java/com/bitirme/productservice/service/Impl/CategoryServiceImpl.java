@@ -1,12 +1,16 @@
 package com.bitirme.productservice.service.Impl;
 
 import com.bitirme.productservice.dto.CategoryDto;
+import com.bitirme.productservice.exception.CategoryNotFoundException;
 import com.bitirme.productservice.model.Category;
 import com.bitirme.productservice.repository.CategoryRepository;
 import com.bitirme.productservice.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -18,11 +22,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;
 
+    Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
+
+    public String authName(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
+
     @Override
     @Transactional
     public CategoryDto createCategory(CategoryDto dto) {
         checkCategoryExist(dto);
         Category category = toEntity(dto);
+        logger.info("kategori oluşturuldu " +dto.getName()+" " + authName());
         return toDto(repository.save(category));
     }
     @Override
@@ -38,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getByName(String name) {
         return repository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found   " + getClass().getName()));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found   " + getClass().getName()));
     }
 
     @Override
@@ -49,12 +61,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getById(String id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found   " + getClass().getName()));
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found   " + getClass().getName()));
     }
 
     @Override
     public void deleteCategory(String id) {
-        repository.deleteById(id);
+       repository.deleteById(id);
+        logger.info(id + " Kategori silindi "+ authName());
     }
 
     public Category toEntity(CategoryDto dto) {
@@ -75,6 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
     private Category checkCategoryUpdate(CategoryDto dto, Category category) {
         category.setName(dto.getName()==null?category.getName():dto.getName());
         category.setDescription(dto.getDescription()==null?category.getDescription():dto.getDescription());
+        logger.info(category.getName() +" kategori güncellendi "+authName());
         return category;
     }
 

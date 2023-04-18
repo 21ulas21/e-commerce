@@ -19,6 +19,7 @@ public class InventoryWebClient {
 
     public void createInventory(String productId){
         webClient.post().uri(INVENTORY_SERVICE_CREATE,productId)
+                .header("API_KEY","123456")
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
