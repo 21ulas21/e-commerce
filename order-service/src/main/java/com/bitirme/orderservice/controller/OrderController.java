@@ -8,15 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("siparis")
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/cart/order")
 public class OrderController {
     private final OrderService orderService;
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping()
-    public ResponseEntity<OrderResponse> createOrder(@RequestParam String personId){
+    public ResponseEntity<OrderResponse> createOrder(){
 
-       OrderDto orderDto = orderService.createOrder(personId);
+       OrderDto orderDto = orderService.createOrder();
         return ResponseEntity.ok(OrderResponse.toResponse(orderDto));
 
     }

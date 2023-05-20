@@ -19,6 +19,12 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+        instance:
+          management-base-url: http://localhost:8081
 eureka:
   client:
     register-with-eureka: true
@@ -31,3 +37,12 @@ eureka:
 logging:
   file:
     name: E:/ecommerce/micro/log/micro.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

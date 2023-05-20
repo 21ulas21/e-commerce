@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
@@ -41,7 +41,6 @@ public class CartController {
         return ResponseEntity.ok(CartResponse.toResponse(cartService.getCart()));
 
     }
-
 
 
 

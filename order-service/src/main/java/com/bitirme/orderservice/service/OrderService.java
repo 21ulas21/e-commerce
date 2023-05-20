@@ -5,6 +5,6 @@ import com.bitirme.orderservice.dto.OrderDto;
 import java.util.List;
 
 public interface OrderService {
-    OrderDto createOrder(String personId);
+    OrderDto createOrder();
     List<OrderDto> getAllOrder(String personId);
 }

@@ -1,5 +1,19 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+        instance:
+          management-base-url: http://localhost:8081
   application:
     name: GATEWAY-SERVICE
   cloud:
@@ -8,7 +22,7 @@ spring:
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
-            - Path=/order/**
+            - Path= /cart/**
           filters:
             - AuthenticationFilter
         - id: payment-service

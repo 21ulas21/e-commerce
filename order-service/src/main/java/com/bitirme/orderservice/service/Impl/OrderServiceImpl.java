@@ -34,12 +34,14 @@ public class OrderServiceImpl implements OrderService {
        return toDto(repository.save(order));
     }
 
-    public OrderDto createOrder(String personId){
+    public OrderDto createOrder(){
 
-   CartDto cartDto = cartService.getCartById(personId);
+   CartDto cartDto = cartService.getCartById();
    OrderDto orderDto = createOrderEntity(cartDto);
    return  orderDto;
     }
+
+
 
 
 

@@ -89,7 +89,7 @@ public class CartServiceImpl implements CartService {
     }
 
 
-    public CartDto getCartById(String personId){//A ve B ürününden
+    public CartDto getCartById(){//A ve B ürününden
         Cart cart = calculatePrice(getUserCart());
         checkInventory();
         List<OrderItems> orderItems = new ArrayList<>(cart.getOrderItems());
