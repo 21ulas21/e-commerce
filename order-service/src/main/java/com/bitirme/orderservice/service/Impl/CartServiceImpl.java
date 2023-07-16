@@ -30,7 +30,6 @@ public class CartServiceImpl implements CartService {
     private final OrderItemServiceImpl orderItemService;
     private final InventoryWebClient inventoryService;
     private final ProductWebClient productService;
-
     Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
 
 
@@ -102,7 +101,7 @@ public class CartServiceImpl implements CartService {
 
 
     }
-    public Cart calculatePrice(Cart cart){
+    private Cart calculatePrice(Cart cart){
         List<OrderItems> orderItemsList = cart.getOrderItems();
         double temp = orderItemsList.stream()
                 .mapToDouble(orderItems -> orderItems.getProductPrice()*orderItems.getQuantity())
@@ -111,7 +110,7 @@ public class CartServiceImpl implements CartService {
         return cart;
 
     }
-    public void checkInventory(){
+    private void checkInventory(){
         Cart cart = getUserCart();
         List<OrderItems> orderItems = cart.getOrderItems();
         orderItems.stream()
@@ -134,13 +133,6 @@ public class CartServiceImpl implements CartService {
                 .personId(cart.getPersonId())
                 .build();
     }
-
-    /*
-    TODO: AUTH kısmı yapılacak !!!!!!!
-            Filtreleme
-            Analiz son 30 ürün getirme
-
-     */
 
     public Cart getUserCart(){
 

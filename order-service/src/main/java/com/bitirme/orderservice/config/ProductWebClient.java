@@ -4,11 +4,11 @@ import com.bitirme.orderservice.dto.ProductDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static com.bitirme.orderservice.constants.ProductConstants.GET_PRODUCT_BY_ID;
 
 @Service
 public class ProductWebClient {
     private final static String PRODUCT_SERVICE_BASE_URL ="http://PRODUCT-SERVICE/product";
+    public final static String GET_PRODUCT_BY_ID="/{id}";
 
     private final WebClient webClient;
 

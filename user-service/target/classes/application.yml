@@ -6,7 +6,7 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth
+    url: jdbc:postgresql://localhost:5432/bitirme-user
     username: postgres
     password: 123456
     driver-class-name: org.postgresql.Driver

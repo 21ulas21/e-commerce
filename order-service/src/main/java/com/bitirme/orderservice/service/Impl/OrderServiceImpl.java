@@ -1,12 +1,17 @@
 package com.bitirme.orderservice.service.Impl;
 
 
+import com.bitirme.orderservice.config.InventoryWebClient;
+import com.bitirme.orderservice.config.PaymentWebClient;
 import com.bitirme.orderservice.dto.CartDto;
 import com.bitirme.orderservice.dto.OrderDto;
 import com.bitirme.orderservice.model.Order;
 import com.bitirme.orderservice.repository.OrderRepository;
+import com.bitirme.orderservice.request.PaymentRequest;
 import com.bitirme.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,9 +22,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repository;
     private final CartServiceImpl cartService;
+    private final PaymentWebClient paymentService;
+    private final InventoryWebClient inventoryService;
 
-    public List<OrderDto> getAllOrder(String personId){
-        List<Order> orders = repository.findByPersonId(personId);
+    public List<OrderDto> getAllOrder(){
+        Authentication authentication = getUser();
+        String user = authentication.getName();
+        List<Order> orders = repository.findByPersonId(user);
         return orders.stream().map(this::toDto).collect(Collectors.toList());
 
     }
@@ -35,15 +44,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public OrderDto createOrder(){
+       CartDto cartDto = cartService.getCartById();
+       OrderDto orderDto = createOrderEntity(cartDto);
+       Authentication user = getUser();
+       boolean status = paymentService.createPayment(orderDto.getId(),user.getName(), orderDto.getTotalPrice());
+       if (status){
+           cartDto.getOrderItems().forEach(orderItems -> inventoryService.decStock(orderItems.getProductId(), orderItems.getQuantity()));
+           return orderDto;
+       }
 
-   CartDto cartDto = cartService.getCartById();
-   OrderDto orderDto = createOrderEntity(cartDto);
-   return  orderDto;
+       return  orderDto;
     }
-
-
-
-
 
 
     public OrderDto toDto(Order order){
@@ -54,6 +65,10 @@ public class OrderServiceImpl implements OrderService {
                 .personId(order.getPersonId())
                 .creatDate(order.getCreatedDate())
                 .build();
+    }
+
+    private Authentication getUser(){
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
 
