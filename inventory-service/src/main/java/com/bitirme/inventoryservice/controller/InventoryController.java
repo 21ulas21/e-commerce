@@ -17,9 +17,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/inventory")
+
 public class InventoryController {
 
     private final InventoryService inventoryService;
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<InventoryResponse>> getAllStock(){
@@ -28,6 +30,7 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryResponseList);
 
     }
+
     @PreAuthorize("hasAnyAuthority('ADMIN','SERVICE')")
     @PostMapping("/create/{productId}")
     public ResponseEntity<String> createStock(@PathVariable String productId){
@@ -46,6 +49,7 @@ public class InventoryController {
     @PreAuthorize("hasAnyAuthority('ADMIN','SERVICE')")
     @PutMapping("/decstock")
     public void decStock(@RequestParam String productId, @RequestParam Integer quantity){
+        System.out.println("decstock");
         inventoryService.stockDec(productId, quantity);
     }
 

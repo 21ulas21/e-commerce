@@ -14,15 +14,17 @@ import javax.persistence.*;
 public class Inventory {
     private static final String COL_ID="id";
     private static final String COL_PRODUCT_ID="product_id";
-    private static final String COL_QUANTİTY="quantity";
+    private static final String COL_QUANTITY="quantity";
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = COL_ID)
     private String id;
+
     @Column(name = COL_PRODUCT_ID)
     private String productId;
-    @Column(name = COL_QUANTİTY)
+
+    @Column(name = COL_QUANTITY)
     private Integer quantity;
 
 }

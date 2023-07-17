@@ -113,13 +113,19 @@ public class CartServiceImpl implements CartService {
     private void checkInventory(){
         Cart cart = getUserCart();
         List<OrderItems> orderItems = cart.getOrderItems();
-        orderItems.stream()
+       /* orderItems.stream()
                 .filter(orderItems1
                         -> inventoryService
                         .getInventory(orderItems1.getProductId()).getQuantity()>=orderItems1.getQuantity())
                 .findFirst()
                 .orElseThrow(
-                        () -> new MissingStockException("ürün stokta bulunamadı"));
+                        () -> new MissingStockException("ürün stokta bulunamadı"));*/
+
+        for (int i=0;i<orderItems.size();i++){
+            if (inventoryService.getInventory(orderItems.get(i).getProductId()).getQuantity() < orderItems.get(i).getQuantity()){
+                throw new MissingStockException("ürün stokta bulunamadı");
+            }
+        }
 
     }
 

@@ -28,7 +28,7 @@ spring:
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Path=/payment/**
+            - Path=/payments/**
           filters:
             - AuthenticationFilter
         - id: inventory-service

@@ -49,9 +49,11 @@ public class OrderServiceImpl implements OrderService {
        Authentication user = getUser();
        boolean status = paymentService.createPayment(orderDto.getId(),user.getName(), orderDto.getTotalPrice());
        if (status){
+           System.out.println("!STATUS çalıştı");
            cartDto.getOrderItems().forEach(orderItems -> inventoryService.decStock(orderItems.getProductId(), orderItems.getQuantity()));
            return orderDto;
        }
+        System.out.println("!STATUS çalışmadı");
 
        return  orderDto;
     }

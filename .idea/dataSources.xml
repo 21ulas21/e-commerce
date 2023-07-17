@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="orderdeneme@localhost" uuid="cdceed76-5472-409b-9e31-c66720d2ae7d">
+    <data-source source="LOCAL" name="bitirme-user@localhost" uuid="802068d8-8238-4c59-8ee4-1980143cb42b">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/orderdeneme</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/bitirme-user</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="denemeinventory@localhost" uuid="2eb44edb-0bd7-4a38-a9e2-fee0742984d9">
+    <data-source source="LOCAL" name="bitirme-product@localhost" uuid="acfa11c9-a40f-40bf-8888-b3e55ea07eb3">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/denemeinventory</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/bitirme-product</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="denemeproduct@localhost" uuid="f414a289-e62b-4d0c-9dbb-3d045f91e2e0">
+    <data-source source="LOCAL" name="bitirme-payment@localhost" uuid="c84f4082-5b11-4e01-b8ea-de363d00d6a0">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/denemeproduct</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/bitirme-payment</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="auth@localhost" uuid="22439e59-b513-4c65-ab82-e75f6648256a">
+    <data-source source="LOCAL" name="bitirme-order@localhost" uuid="24568069-96bd-4a96-bc2e-b8a3f1e46732">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/auth</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/bitirme-order</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="bitirme-inventory@localhost" uuid="24d1c5d8-14f8-47e9-81f3-76b4c9d55080">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/bitirme-inventory</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

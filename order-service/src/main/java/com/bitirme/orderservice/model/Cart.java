@@ -1,8 +1,7 @@
 package com.bitirme.orderservice.model;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ApiModel(value = "Cart entity", description = "Entity")
 public class Cart {
 
     private final static String COL_ID="id";
@@ -27,18 +25,14 @@ public class Cart {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = COL_ID)
-    @ApiModelProperty(value = "sepet id")
     private String id;
 
-    @ApiModelProperty("sepete ait olan kişi")
     @Column(name = COL_PERSON_ID)
     private String personId;
 
-    @ApiModelProperty(value ="toplan tutar" )
     @Column(name = COL_TOTAL_PRICE)
     private double totalPrice;
 
-    @ApiModelProperty(value = "sepetteki ürünler, fiyatları ve adedleri")
     @OneToMany()
     public List<OrderItems> orderItems;
 

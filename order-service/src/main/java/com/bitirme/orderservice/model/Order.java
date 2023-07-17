@@ -1,7 +1,5 @@
 package com.bitirme.orderservice.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,20 +18,16 @@ import java.util.List;
 @Entity
 @Table(name = "siparis")
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(value = "order entity", description = "entity")
 public class Order {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @ApiModelProperty(value = "order-id")
     private String id;
 
      @CreatedDate
      @Temporal(TemporalType.TIMESTAMP)
-     @ApiModelProperty(value = "oluşturulma tarihi")
      private Date createdDate;
 
-    @ApiModelProperty(value = "kullanıcı id")
      private String personId;
 
      @OneToMany()

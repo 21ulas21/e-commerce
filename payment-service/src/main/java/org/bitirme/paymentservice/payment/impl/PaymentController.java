@@ -15,7 +15,7 @@ public class PaymentController {
     private final PaymentService service;
 
     @PostMapping()
-    public boolean creatPayment(@RequestBody PaymentRequest request){
+    public Boolean creatPayment(@RequestBody PaymentRequest request){
        return service.createPayment(request.toDto());
     }
     @PutMapping("/{id}")
