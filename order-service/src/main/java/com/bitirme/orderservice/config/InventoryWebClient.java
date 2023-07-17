@@ -4,6 +4,7 @@ import com.bitirme.orderservice.dto.InventoryDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class InventoryWebClient {
@@ -26,13 +27,22 @@ public class InventoryWebClient {
                .block();
 
     }
-    public void decStock(String productId, int quantity){
-
+    public void decStock(String productId, int quantity) {
         webClient.put()
-                .uri(uri-> uri.path(DEC_STOCK)
-                        .queryParam("productId",productId)
-                        .queryParam("quantity",quantity).build());
-
+                .uri(uriBuilder -> uriBuilder.path("/decstock")
+                        .queryParam("productId", productId)
+                        .queryParam("quantity", quantity)
+                        .build())
+                .header("API_KEY", "123456")
+                .retrieve()
+                .toBodilessEntity()
+                .subscribe(response -> {
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        System.out.println("İstek başarıyla tamamlandı");
+                    } else {
+                        System.out.println("İstek başarısız oldu. Hata kodu: " + response.getStatusCode());
+                    }
+                });
     }
 
 
